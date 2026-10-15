@@ -28,25 +28,30 @@ This allows malicious developers to silently harvest user email addresses (PII) 
    ```
 
 3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory and add your test application's credentials:
+   Copy `.env.example` to `.env` (or create a `.env` file) and fill in your test application's credentials:
    ```env
    CLIENT_ID=your_discord_client_id_here
    CLIENT_SECRET=your_discord_client_secret_here
    ```
 
 4. **Start the PoC Server:**
+   *Directly with Node.js:*
    ```bash
    node server.js
    ```
 
+   *Or using Docker Compose:*
+   ```bash
+   docker compose up -d --build
+   ```
+
 ## 🧪 Reproduction Steps
 1. Navigate to `http://localhost:3000` in your web browser.
-2. Click the **"Login with Discord (Test)"** button. 
-   *(Note: The URL generated specifically requests `scope=identify` ONLY).*
-3. Look closely at the Discord Authorization screen. It will only ask for permission to "Access your username and avatar". **It does not mention email access.**
-4. Click **Authorize**.
-5. You will be redirected back to the PoC application.
-6. **Observe the result:** The page will display the raw JSON response from `/users/@me`. The `email` field will be populated with the user's email address, successfully proving the scope bypass.
+2. Select your desired scopes using the interactive interface (e.g. choose the **PoC Bypass (`identify` seul)** preset).
+3. Click the **"Lancer le test d'autorisation Discord"** button.
+4. Look closely at the Discord Authorization screen: with `identify` only, it only asks for permission to access your username and avatar. **It does not mention email access.**
+5. Click **Authorize**.
+6. **Observe the result:** The application will display whether the email was retrieved despite not being granted in the scopes, proving or disproving the scope bypass.
 
 ## ⚠️ Disclaimer
 This code is provided for educational and responsible disclosure purposes only. It was created specifically to demonstrate the vulnerability to the Discord Security Team via their official Bug Bounty program. Do not use this to harvest user data.
